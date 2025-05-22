@@ -22,10 +22,8 @@ const showingNavigationDropdown = ref(false);
                         <div class="flex">
                             <!-- Logo -->
                             <div class="flex shrink-0 items-center">
-                                <Link :href="route('dashboard')">
-                                    <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800"
-                                    />
+                                <Link :href="route('home')">
+                                    Home
                                 </Link>
                             </div>
 
@@ -34,10 +32,17 @@ const showingNavigationDropdown = ref(false);
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
                                 <NavLink
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
+                                    :href="route('dashboard.calculations')"
+                                    :active="route().current('dashboard.calculations')"
                                 >
                                     Dashboard
+                                </NavLink>
+                                <NavLink
+                                    v-if="$page.props.auth.user?.role === 'admin'"
+                                    :href="route('dashboard.admin.calculations')"
+                                    :active="route().current('dashboard.admin.calculations')"
+                                >
+                                    Admin Dashboard
                                 </NavLink>
                             </div>
                         </div>

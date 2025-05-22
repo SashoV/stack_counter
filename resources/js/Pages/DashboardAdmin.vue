@@ -1,6 +1,5 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { watch } from "vue";
 import { Head, Link, router } from '@inertiajs/vue3';
 import Pagination from "@/Components/Pagination.vue";
 import Modal from '@/Components/Modal.vue';
@@ -9,22 +8,10 @@ import { ref } from 'vue';
 const props = defineProps({
     calculations: Object,
     sort: String,
-    success: String,
 });
-
-const successMessage = ref(props.success || '');
-watch(() => props.success, (newValue) => {
-    if (newValue) {
-        successMessage.value = newValue;
-    }
-});
-
-const clearSuccessMessage = () => {
-    successMessage.value = '';
-};
 
 const changeSort = (order) => {
-    router.get('/dashboard/calculations', { sort: order }, {
+    router.get('/dashboard/admin/calculations', { sort: order }, {
         preserveScroll: true,
         preserveState: true,
     });
@@ -52,15 +39,14 @@ function downloadCSV(calculationId) {
     link.click();
     document.body.removeChild(link);
 }
-
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Admin Dashboard" />
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Dashboard
+                Admin Dashboard
             </h2>
         </template>
         <div class="py-12">
@@ -68,19 +54,7 @@ function downloadCSV(calculationId) {
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <div class="container mx-auto py-4">
-                            <!-- Display success message if available -->
-                            <div role="alert" v-if="successMessage"
-                                class="mb-4 relative flex w-1/3 p-3 text-sm text-white bg-gray-400 rounded-md">
-                                <div>
-                                    {{ successMessage }}
-                                </div>
-                                <button
-                                    class="flex items-center justify-center transition-all w-8 h-8 rounded-md text-white hover:bg-white/10 active:bg-white/10 absolute top-1.5 right-1.5"
-                                    type="button" @click="clearSuccessMessage">
-                                    <span class="text-lg">&times;</span>
-                                </button>
-                            </div>
-                            <h1 class="text-2xl font-bold mb-4">Your Book Stack Calculations</h1>
+                            <h1 class="text-2xl font-bold mb-4">Book Stack Calculations (All users)</h1>
                             <!-- Sort Dropdown -->
                             <div class="mb-4">
                                 <label for="sortSelect" class="block text-sm font-medium text-gray-700 mb-1">Sort
@@ -101,6 +75,7 @@ function downloadCSV(calculationId) {
                                             <th class="py-3 px-6">Length</th>
                                             <th class="py-3 px-6">Visible</th>
                                             <th class="py-3 px-6">Calculation Time</th>
+                                            <th class="py-3 px-6">Created By</th>
                                             <th class="py-3 px-6">Created At</th>
                                             <th class="py-3 px-6">Actions</th>
                                         </tr>
@@ -112,6 +87,7 @@ function downloadCSV(calculationId) {
                                             <td class="py-3 px-6">{{ calculation.length }}</td>
                                             <td class="py-3 px-6">{{ calculation.visible }}</td>
                                             <td class="py-3 px-6">{{ calculation.calculation_time }} ms</td>
+                                            <td class="py-3 px-6">{{ calculation.user.name }}</td>
                                             <td class="py-3 px-6">{{ new
                                                 Date(calculation.created_at).toLocaleString('en-GB')
                                                 }}</td>
